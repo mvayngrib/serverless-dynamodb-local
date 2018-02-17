@@ -146,7 +146,14 @@ class ServerlessDynamodbLocal {
     }
 
     removeHandler() {
-        return new BbPromise((resolve) => dynamodbLocal.remove(resolve));
+        const { raw } = this.dynamodbOptions();
+        const { tables } = this;
+        return BbPromise.each(tables, (table) => {
+            return raw.deleteTable({ TableName: table.TableName }).promise()
+                .catch(err => {
+                    if (err.code !== 'ResourceNotFoundException') throw err;
+                });
+        });
     }
 
     installHandler() {
