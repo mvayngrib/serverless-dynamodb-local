@@ -252,7 +252,10 @@ class ServerlessDynamodbLocal {
                 migration.StreamSpecification.StreamEnabled = true;
             }
             if (migration.TimeToLiveSpecification) {
-              delete migration.TimeToLiveSpecification;
+                delete migration.TimeToLiveSpecification;
+            }
+            if (migration.PointInTimeRecoverySpecification) {
+                delete migration.PointInTimeRecoverySpecification
             }
             dynamodb.raw.createTable(migration, (err) => {
                 if (err) {
